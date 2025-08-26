@@ -3,11 +3,7 @@ const cors = require("cors");
 const nodemailer = require("nodemailer");
 
 const app = express();
-app.use(cors(
-    {
-        origin: "http://localhost:3000",
-    }
-));
+app.use(cors());
 app.use(express.json());
 
 app.post('/send-email', async (req, res) => {
@@ -36,5 +32,5 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
