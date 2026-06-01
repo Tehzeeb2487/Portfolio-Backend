@@ -7,27 +7,34 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/send-email', async (req, res) => {
-    console.log("Request received");
-    console.log(req.body);
-
-    const { name, email, message } = req.body;
-
     try {
-        let transporter = nodemailer.createTransport({
+        console.log("Request body:", req.body);
+    
+        const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'javedshikh312@gmail.com',
-                pass: 'fpqyvphksczifltl',
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS,
             },
         });
 
-        await transporter.sendMail({
+        console.log("Verifying transporter...");
+
+        await transporter.verify();
+
+        console.log("Transporter verified");
+
+        const info = await transporter.sendMail({
             from: 'javedshikh312@gmail.com',
             to: 'javedshikh312@gmail.com',
-            subject: `Message from ${name}`,
-            text: `From: ${email}\n${message}`,
-            replyTo: email,
+            subject: `Message from ${req.body.name}`,
+            text: `
+                Name: ${req.body.name}
+                Email: ${req.body.email}
+                ${req.body.message}
+            `,
         });
+        console.log("Mail sent:", info>messageId);
 
         res.status(200).send({ message: "Email sent successfully" });
     } catch (error) {
