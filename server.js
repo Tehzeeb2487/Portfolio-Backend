@@ -11,12 +11,20 @@ app.post('/send-email', async (req, res) => {
         console.log("Request body:", req.body);
     
         const transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
+            connectionTimeout: 30000,
+            greetingTimeout: 30000,
+            socketTimeout: 30000,
         });
+
+        console.log("EMAIL_USER:", process.env.EMAIL_USER);
+        console.log("EMAIL_PASS exists:", !!process.env.EMAIL_PASS);
 
         console.log("Verifying transporter...");
 
@@ -34,7 +42,7 @@ app.post('/send-email', async (req, res) => {
                 ${req.body.message}
             `,
         });
-        console.log("Mail sent:", info>messageId);
+        console.log("Mail sent:", info.messageId);
 
         res.status(200).send({ message: "Email sent successfully" });
     } catch (error) {
