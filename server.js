@@ -11,16 +11,13 @@ app.post('/send-email', async (req, res) => {
         console.log("Request body:", req.body);
     
         const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false,
+            service: "gmail",
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS,
             },
-            connectionTimeout: 30000,
-            greetingTimeout: 30000,
-            socketTimeout: 30000,
+            logger: true,
+            debug: true,
         });
 
         console.log("EMAIL_USER:", process.env.EMAIL_USER);
@@ -28,7 +25,7 @@ app.post('/send-email', async (req, res) => {
 
         console.log("Verifying transporter...");
 
-        await transporter.verify();
+        // await transporter.verify();
 
         console.log("Transporter verified");
 
