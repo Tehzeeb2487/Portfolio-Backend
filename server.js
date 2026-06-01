@@ -7,6 +7,9 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/send-email', async (req, res) => {
+    console.log("Request received");
+    console.log(req.body);
+
     const { name, email, message } = req.body;
 
     try {
@@ -19,7 +22,7 @@ app.post('/send-email', async (req, res) => {
         });
 
         await transporter.sendMail({
-            from: 'javedshaikh312@gmail.com',
+            from: 'javedshikh312@gmail.com',
             to: 'javedshikh312@gmail.com',
             subject: `Message from ${name}`,
             text: `From: ${email}\n${message}`,
@@ -28,7 +31,8 @@ app.post('/send-email', async (req, res) => {
 
         res.status(200).send({ message: "Email sent successfully" });
     } catch (error) {
-        res.status(500).send({ message: "Failed to send email" });
+        console.error("MAIL ERROR:", error);
+        res.status(500).send({ message: error.message });
     }
 });
 
